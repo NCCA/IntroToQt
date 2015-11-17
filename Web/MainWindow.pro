@@ -3,7 +3,7 @@
 ######################################################################
 
 TEMPLATE = app
-QT+=gui widgets core webkitwidgets
+QT+= gui widgets core webkitwidgets
 TARGET = MainWindow
 DEPENDPATH += .
 INCLUDEPATH += .

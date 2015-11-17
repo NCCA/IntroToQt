@@ -2,7 +2,7 @@
 #include <QMainWindow>
 #include <QWebView>
 #include <QPushButton>
-#include <QToolbar>
+#include <QToolBar>
 
 int main(int argc, char *argv[])
 {
