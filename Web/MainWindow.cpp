@@ -18,6 +18,7 @@ int main(int argc, char *argv[])
   toolbar->addWidget(fwd);
 
   w.addToolBar(toolbar);
+  w.addToolBar(toolbar);
 
 	QWebView *page = new QWebView();
 	page->load(QUrl("http://www.google.co.uk"));
