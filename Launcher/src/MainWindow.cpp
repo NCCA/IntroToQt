@@ -89,7 +89,7 @@ void MainWindow::keyPressEvent(QKeyEvent *_event)
   // we then switch on the key value and set the camera in the GLWindow
   switch (_event->key())
   {
-    case Qt::Key_Escape : QApplication::exit(EXIT_SUCCESS); break;
+    //case Qt::Key_Escape : QApplication::exit(EXIT_SUCCESS); break;
     default : break;
   }
 }
