@@ -1,4 +1,6 @@
 #Launcher
+![alt tag](http://nccastaff.bournemouth.ac.uk/jmacey/GraphicsLib/Demos/Launcher.png)
+
 
 This is a simple Qt Application which will create a series of buttons to launch applications.
 
