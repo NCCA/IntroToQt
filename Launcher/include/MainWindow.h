@@ -6,6 +6,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QGroupBox>
+#include "DebugWindow.h"
 /// @file MainWindow.h
 
 class MainWindow : public QDialog
@@ -26,13 +27,15 @@ class MainWindow : public QDialog
     ~MainWindow();
   public slots :
     void onButtonPress();
+    void onShowDebug(bool _mode);
 
   private:
-    QPushButton *addButton(const QString &_text, const QString &_path, const QString _exe);
+    QPushButton *addButton(const QString &_text, const QString &_path, const QString &_exe, const QString &_args);
     void readCFGFile(const QString &_fname);
 
     QBoxLayout *layout;
     QString m_pwd;
+    DebugWindow *m_debug=nullptr;
 
 };
 

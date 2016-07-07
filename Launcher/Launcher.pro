@@ -10,12 +10,20 @@ TARGET=Launcher
 OBJECTS_DIR=obj/
 MOC_DIR=moc/
 SOURCES += $$PWD/src/main.cpp \
-           $$PWD/src/MainWindow.cpp
+           $$PWD/src/MainWindow.cpp \
+    src/DebugWindow.cpp
 OTHER_FILES+=launcher.cfg
 INCLUDEPATH += include/
 
 HEADERS += $$PWD/include/MainWindow.h \
+    include/DebugWindow.h
 
 CONFIG -= app_bundle
 CONFIG +=c++11
 DEPENDPATH+=include
+
+FORMS += \
+    ui/DebugWindow.ui
+
+RESOURCES += \
+    src/resources.qrc

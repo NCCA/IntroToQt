@@ -4,6 +4,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <iostream>
+#include <QDebug>
 /* this code runs the basic main window and is created by the Qt Creator app */
 int main(int argc, char *argv[])
 {
@@ -19,7 +20,9 @@ int main(int argc, char *argv[])
   else
   {
 
+
     QString file=QDir::currentPath();
+
     file+="/launcher.cfg";
     QFileInfo check_file(file);
     if (check_file.exists() && check_file.isFile())
