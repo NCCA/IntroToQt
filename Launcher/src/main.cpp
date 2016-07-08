@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 
     QString file=QDir::currentPath();
 
-    file+="/launcher.cfg";
+    file+="/launcher.json";
     QFileInfo check_file(file);
     if (check_file.exists() && check_file.isFile())
     {
@@ -31,8 +31,8 @@ int main(int argc, char *argv[])
     }
     else
     {
-      std::cerr<<"No launcher.cfg found in current directory\n";
-      std::cerr<<"Usage Launcher [filename] or have a launcer.cfg in dir\n";
+      std::cerr<<"No launcher.json found in current directory\n";
+      std::cerr<<"Usage Launcher [filename] or have a launcer.json in current dir\n";
       exit(EXIT_FAILURE);
     }
 

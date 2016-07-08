@@ -11,19 +11,23 @@ OBJECTS_DIR=obj/
 MOC_DIR=moc/
 SOURCES += $$PWD/src/main.cpp \
            $$PWD/src/MainWindow.cpp \
-    src/DebugWindow.cpp
-OTHER_FILES+=launcher.cfg
+           $$PWD/src/DebugWindow.cpp \
+           $$PWD/src/AddItem.cpp
+OTHER_FILES+=launcher.cfg \
+             launcher.json
 INCLUDEPATH += include/
 
 HEADERS += $$PWD/include/MainWindow.h \
-    include/DebugWindow.h
+          $$PWD/include/DebugWindow.h \
+          $$PWD/include/AddItem.h
 
 CONFIG -= app_bundle
 CONFIG +=c++11
 DEPENDPATH+=include
 
 FORMS += \
-    ui/DebugWindow.ui
+    ui/DebugWindow.ui \
+    ui/AddItem.ui
 
 RESOURCES += \
     src/resources.qrc

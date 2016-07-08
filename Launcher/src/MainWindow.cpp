@@ -9,22 +9,59 @@
 #include <QCheckBox>
 #include <QLabel>
 #include <QMessageBox>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonValue>
+#include <QJsonArray>
 #include "DebugWindow.h"
+#include "AddItem.h"
 
-MainWindow::MainWindow(const QString &_filename, QWidget *_parent ): QDialog(_parent)
+
+MainWindow::MainWindow(const QString &_filename, QWidget *_parent ): QMainWindow(_parent)
 {
+  // set title of window.
   setWindowTitle(QString("Launcher"));
+  // make the window stay on top
+  setWindowFlags(Qt::WindowStaysOnTopHint);
+  // add the icon from the resource and add to window
+  setWindowIcon(QIcon(":/icons/Rocket-50.png"));
+  // add the icon text
+  setWindowIconText("Launcher");
+
+  // create a layout for the main window
   layout = new QVBoxLayout;
   layout->addStretch(1);
-  readCFGFile(_filename);
+  // read the config file
+  readJSonFile(_filename);
+  // create a check box for the debug window
   QCheckBox *debugWindow = new QCheckBox("show debug",this);
-  setLayout(layout);
-  QString m_pwd=QDir::currentPath();
-  setWindowFlags(Qt::WindowStaysOnTopHint);
+  // connect the slots
   QObject::connect(debugWindow,SIGNAL(clicked(bool)),this,SLOT(onShowDebug(bool)));
+  // add to the window
+  layout->addWidget(debugWindow);
+
+  // create a debug window for the output of the process but keep it hiden
   m_debug = new DebugWindow(this);
-  setWindowIcon(QIcon(":/icons/Rocket-50.png"));
-  setWindowIconText("Launcher");
+  // now add the menu items
+  m_menuBar = new QMenuBar(this);
+  m_helpAction = new QAction(tr("&About"), this);
+  m_helpAction->setStatusTip(tr("About"));
+  QObject::connect(m_helpAction, SIGNAL(triggered()), this, SLOT(showHelp()));
+  m_helpMenu = m_menuBar->addMenu(tr("&Help"));
+  m_helpMenu->addAction(m_helpAction);
+  setMenuBar(m_menuBar);
+  // create a Widget for the window and add the layout to id.
+  QWidget *window = new QWidget();
+  window->setLayout(layout);
+  // set as the window centeral widget
+  setCentralWidget(window);
+  // now add the menu items etc
+  m_addItemAction = new QAction(tr("Add Item"), this);
+  m_addItemAction->setStatusTip(tr("Add Item"));
+  QObject::connect(m_addItemAction, SIGNAL(triggered()), this, SLOT(addItem()));
+  m_fileMenu = m_menuBar->addMenu(tr("&Add"));
+  m_fileMenu->addAction(m_addItemAction);
+  setMenuBar(m_menuBar);
 
 }
 
@@ -38,52 +75,7 @@ void MainWindow::onShowDebug(bool _mode)
   {
     m_debug->hide();
   }
-
 }
-
-
-void MainWindow::readCFGFile(const QString &_fname)
-{
-  QFile inputFile(_fname);
-  if (!inputFile.open(QIODevice::ReadOnly | QIODevice::Text))
-          return;
-  QTextStream in(&inputFile);
-  int lineNo=0;
-  while (!in.atEnd())
-  {
-      ++lineNo;
-      QString line = in.readLine();
-      if(*line.begin()=='#')
-        continue;
-      else
-      {
-        QStringList data = line.split(' ');
-        if(data.size() <3)
-        {
-          QMessageBox mb(this);
-          QString text=QString("Error with launcher.cfg line %1 \n%2").arg(lineNo).arg(line);
-          mb.setText(text);
-          mb.show();
-          mb.exec();
-          continue;
-        }
-        else
-        {
-          QString args;
-          for(int i=3; i<data.size(); ++i)
-          {
-            args+=data.at(i);
-            args+=' ';
-          }
-          layout->addWidget(addButton(data.at(0), data.at(1), data.at(2),args));
-        }
-      }
-
-  }
-
-
-}
-
 
 
 void MainWindow::onButtonPress()
@@ -142,3 +134,64 @@ void MainWindow::keyPressEvent(QKeyEvent *_event)
   }
 }
 
+void MainWindow::showHelp()
+{
+  QMessageBox mb(this);
+  QString text=QString("Launcher system for simple apps\n"
+                       "Run from a directory containing launcher.cfg file\n"
+                       "Or pass a command line argument\n"
+                       "see https://github.com/NCCA/IntroToQt/tree/master/Launcher\n");
+  mb.setText(text);
+  mb.show();
+  mb.exec();
+
+}
+
+void MainWindow::addItem()
+{
+  AddItem *item = new AddItem(this);
+  item->show();
+  bool ret=item->exec();
+  if(ret==false)
+  {
+    return;
+  }
+  else
+  {
+    layout->addWidget(addButton(item->buttonText(),
+                                item->path(),
+                                item->executable(),
+                                item->arguments()));
+  }
+}
+
+
+
+void MainWindow::readJSonFile(const QString &_fname)
+{
+  QFile inputFile(_fname);
+  if (!inputFile.open(QIODevice::ReadOnly | QIODevice::Text))
+          return;
+  QByteArray data=inputFile.readAll();
+  qDebug()<<"reading JSON";//<<data;
+  QJsonDocument doc = QJsonDocument::fromJson(data);
+  QJsonObject jsonObject=doc.object();
+  QJsonArray programs = jsonObject["Programs"].toArray();
+  qDebug()<<programs.size();
+  QString buttonText,path,exe,args;
+
+  for(auto&& item: programs)
+  {
+    const QJsonObject& prog = item.toObject();
+    buttonText=prog["ButtonText"].toString();
+    path=prog["Path"].toString();
+    exe=prog["Exe"].toString();
+    args=prog["arguments"].toString();
+    qDebug()<<args;
+    layout->addWidget(addButton(buttonText, path, exe,args));
+  }
+
+
+
+
+}
