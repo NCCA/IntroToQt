@@ -44,6 +44,7 @@ class MainWindow : public QMainWindow
     QAction *m_helpAction;
     QMenu *m_fileMenu;
     QAction *m_addItemAction;
+    QString m_filename;
 
 };
 

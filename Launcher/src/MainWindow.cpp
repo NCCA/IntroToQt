@@ -27,7 +27,7 @@ MainWindow::MainWindow(const QString &_filename, QWidget *_parent ): QMainWindow
   setWindowIcon(QIcon(":/icons/Rocket-50.png"));
   // add the icon text
   setWindowIconText("Launcher");
-
+  m_filename=_filename;
   // create a layout for the main window
   layout = new QVBoxLayout;
   layout->addStretch(1);
@@ -162,6 +162,34 @@ void MainWindow::addItem()
                                 item->path(),
                                 item->executable(),
                                 item->arguments()));
+    QFile inputFile(m_filename);
+    if (!inputFile.open(QIODevice::ReadOnly | QIODevice::Text))
+            return;
+    QByteArray data=inputFile.readAll();
+    inputFile.close();
+    // we are now going to save the data back to the json file.
+    QJsonDocument doc = QJsonDocument::fromJson(data);
+    QJsonObject jsonObject=doc.object();
+    QJsonObject newJson;
+    newJson["ButtonText"]=item->buttonText();
+    newJson["Exe"]=item->executable();
+    newJson["Path"]=item->path();
+    newJson["arguments"]=item->arguments();
+    QJsonArray programs = jsonObject["Programs"].toArray();
+    programs.append(newJson);
+    QJsonObject root;
+    root["Programs"]=programs;
+    QJsonDocument newDoc(root);
+
+    QFile saveFile(m_filename);
+    if (!saveFile.open(QIODevice::WriteOnly))
+    {
+        qWarning("Couldn't open save file.");
+           return ;
+    }
+    saveFile.write(newDoc.toJson());
+    saveFile.close();
+
   }
 }
 
@@ -173,11 +201,10 @@ void MainWindow::readJSonFile(const QString &_fname)
   if (!inputFile.open(QIODevice::ReadOnly | QIODevice::Text))
           return;
   QByteArray data=inputFile.readAll();
-  qDebug()<<"reading JSON";//<<data;
+  inputFile.close();
   QJsonDocument doc = QJsonDocument::fromJson(data);
   QJsonObject jsonObject=doc.object();
   QJsonArray programs = jsonObject["Programs"].toArray();
-  qDebug()<<programs.size();
   QString buttonText,path,exe,args;
 
   for(auto&& item: programs)

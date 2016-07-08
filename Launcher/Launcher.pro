@@ -13,8 +13,7 @@ SOURCES += $$PWD/src/main.cpp \
            $$PWD/src/MainWindow.cpp \
            $$PWD/src/DebugWindow.cpp \
            $$PWD/src/AddItem.cpp
-OTHER_FILES+=launcher.cfg \
-             launcher.json
+OTHER_FILES+=launcher.json
 INCLUDEPATH += include/
 
 HEADERS += $$PWD/include/MainWindow.h \

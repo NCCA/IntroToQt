@@ -1,18 +1,22 @@
 {
-  "Programs": [
-
-
-  {
-    "ButtonText": "Simple NGL",
-     "Path" : "/Users/jmacey/NGL6Demos/SimpleNGL",
-     "Exe"  : "SimpleNGL",
-     "arguments" : ""
-    },
- {
-    "ButtonText": "Args Test",
-     "Path" : "/Users/jmacey/NGL6Demos/Collisions/BoundingBox",
-     "Exe"  : "BoundingBox",
-     "arguments" : "1000"
-    }
-]
+    "Programs": [
+        {
+            "ButtonText": "Simple NGL",
+            "Exe": "SimpleNGL",
+            "Path": "/Users/jmacey/NGL6Demos/SimpleNGL",
+            "arguments": ""
+        },
+        {
+            "ButtonText": "Args Test",
+            "Exe": "BoundingBox",
+            "Path": "/Users/jmacey/NGL6Demos/Collisions/BoundingBox",
+            "arguments": "1000"
+        },
+        {
+            "ButtonText": "New",
+            "Exe": "/Users/jmacey/teaching/Code/IntroToQt/Launcher/Launcher",
+            "Path": "/Users/jmacey/teaching/Code/IntroToQt/Launcher",
+            "arguments": ""
+        }
+    ]
 }
