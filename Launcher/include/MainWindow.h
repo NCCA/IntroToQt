@@ -11,7 +11,7 @@
 #include <QMenuBar>
 #include <QAction>
 #include "DebugWindow.h"
-
+#include "ui_MainWindow.h"
 
 class MainWindow : public QMainWindow
 {
@@ -32,12 +32,12 @@ class MainWindow : public QMainWindow
   public slots :
     void onButtonPress();
     void onShowDebug(bool _mode);
-    void showHelp();
-    void addItem();
+    void onShowHelp();
+    void onAddItem();
+    void onRunSequence();
   private:
     QPushButton *addButton(const QString &_text, const QString &_path, const QString &_exe, const QString &_args);
     void readJSonFile(const QString &_fname);
-    QBoxLayout *layout;
     DebugWindow *m_debug=nullptr;
     QMenuBar *m_menuBar;
     QMenu *m_helpMenu;
@@ -45,6 +45,8 @@ class MainWindow : public QMainWindow
     QMenu *m_fileMenu;
     QAction *m_addItemAction;
     QString m_filename;
+    Ui::MainWindow *ui;
+
 
 };
 

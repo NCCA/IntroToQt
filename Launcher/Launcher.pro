@@ -26,7 +26,8 @@ DEPENDPATH+=include
 
 FORMS += \
     ui/DebugWindow.ui \
-    ui/AddItem.ui
+    ui/AddItem.ui \
+    ui/MainWindow.ui
 
 RESOURCES += \
     src/resources.qrc
