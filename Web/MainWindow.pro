@@ -3,10 +3,12 @@
 ######################################################################
 
 TEMPLATE = app
-QT+= gui widgets core webkitwidgets
+QT+= gui widgets core webenginewidgets
 TARGET = MainWindow
 DEPENDPATH += .
 INCLUDEPATH += .
 CONFIG-=app_bundle
 # Input
 SOURCES += MainWindow.cpp
+macx:QMAKE_MAC_SDK = macosx10.12
+
