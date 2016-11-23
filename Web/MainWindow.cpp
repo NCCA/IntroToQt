@@ -1,6 +1,6 @@
 #include <QApplication>
 #include <QMainWindow>
-#include <QWebView>
+#include <QWebEngineView>
 #include <QPushButton>
 #include <QToolBar>
 
@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
   w.addToolBar(toolbar);
   w.addToolBar(toolbar);
 
-	QWebView *page = new QWebView();
+  QWebEngineView *page = new QWebEngineView();
 	page->load(QUrl("http://www.google.co.uk"));
 
   QObject::connect(back,SIGNAL(clicked()),page,SLOT(back()));
