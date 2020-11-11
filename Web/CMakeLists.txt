@@ -9,7 +9,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOUIC_SEARCH_PATHS ${PROJECT_SOURCE_DIR}/ui)
 # find Qt libs
-find_package(Qt5 COMPONENTS Widgets webenginewidgets webview REQUIRED)
+find_package(Qt5 REQUIRED COMPONENTS Core Gui WebEngineWidgets Widgets)
 # use C++ 17
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -18,4 +18,4 @@ set(CMAKE_CXX_EXTENSIONS ON)
 add_executable(${TargetName})
 
 target_sources(${TargetName} PRIVATE ${PROJECT_SOURCE_DIR}/MainWindow.cpp)
-target_link_libraries(${TargetName} PRIVATE Qt5::Widgets )
+target_link_libraries(${TargetName} PRIVATE Qt5::Widgets  Qt5::WebEngineWidgets Qt5::Gui)
