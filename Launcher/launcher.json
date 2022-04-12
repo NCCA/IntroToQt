@@ -15,8 +15,9 @@
         {
             "Arguments": "SimpleNGL.pro",
             "ButtonText": "Run Qt",
-            "Exe": "/Users/jmacey/Qt/Qt\ Creator.app/Contents/MacOS/Qt\ Creator",
+            "Exe": "/Users/jmacey/Qt/Qt Creator.app/Contents/MacOS/Qt Creator",
             "Path": "/Users/jmacey/NGL6Demos/SimpleNGL"
         }
+
     ]
 }

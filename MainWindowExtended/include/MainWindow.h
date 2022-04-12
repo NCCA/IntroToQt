@@ -12,17 +12,17 @@ class MainWindow : public QMainWindow
   protected :
     /// @brief override the keyPressEvent inherited from QObject so we can handle key presses.
     /// @param [in] _event the event to process
-    void keyPressEvent(QKeyEvent *_event);
+    void keyPressEvent(QKeyEvent *_event) override;
     /// @brief override the resizeEvent inherited from QObject so we can handle key presses.
     /// @param [in] _event the event to process
 
-    void resizeEvent (QResizeEvent * _event);
+    void resizeEvent (QResizeEvent * _event) override;
     public:
     /// @brief constructor
     /// @param _parent the parent window the for this window
-    MainWindow(QWidget *_parent = 0);
+    MainWindow(QWidget *_parent = nullptr);
     /// @brief  dtor free up the GLWindow and all resources
-    ~MainWindow();
+    ~MainWindow() override;
   private slots :
 
   private:

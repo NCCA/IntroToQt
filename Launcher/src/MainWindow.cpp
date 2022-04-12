@@ -9,7 +9,6 @@
 #include <QCheckBox>
 #include <QLabel>
 #include <QMessageBox>
-#include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QJsonArray>
@@ -19,8 +18,8 @@
 
 MainWindow::MainWindow(const QString &_filename, QWidget *_parent ): QMainWindow(_parent)
 {
-  ui = new Ui::MainWindow;
-  ui->setupUi(this);
+  m_ui = new Ui::MainWindow;
+  m_ui->setupUi(this);
   // set title of window.
   setWindowTitle(QString("Launcher"));
   // make the window stay on top
@@ -37,21 +36,20 @@ MainWindow::MainWindow(const QString &_filename, QWidget *_parent ): QMainWindow
   readJSonFile(_filename);
   // create a check box for the debug window
   // connect the slots
-  QObject::connect(ui->debugWindow,SIGNAL(clicked(bool)),this,SLOT(onShowDebug(bool)));
-
+  QObject::connect(m_ui->debugWindow,SIGNAL(clicked(bool)),this,SLOT(onShowDebug(bool)));
   // create a debug window for the output of the process but keep it hiden
   m_debug = new DebugWindow(this);
   // now add the menu items
   m_helpAction = new QAction(tr("&About"), this);
   m_helpAction->setStatusTip(tr("About"));
-  QObject::connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(onShowHelp()));
+  QObject::connect(m_ui->actionAbout, SIGNAL(triggered()), this, SLOT(onShowHelp()));
   // create a Widget for the window and add the layout to id.
   QWidget *window = new QWidget();
-  window->setLayout(ui->layout);
+  window->setLayout(m_ui->layout);
   // set as the window centeral widget
   setCentralWidget(window);
-  QObject::connect(ui->actionAdd, SIGNAL(triggered()), this, SLOT(onAddItem()));
-  QObject::connect(ui->runSequence,SIGNAL(clicked()),this,SLOT(onRunSequence()));
+  QObject::connect(m_ui->actionAdd, SIGNAL(triggered()), this, SLOT(onAddItem()));
+  QObject::connect(m_ui->runSequence,SIGNAL(clicked()),this,SLOT(onRunSequence()));
 }
 
 void MainWindow::onShowDebug(bool _mode)
@@ -88,6 +86,7 @@ void MainWindow::onButtonPress()
   // we need to check for empty args as if a program takes args but it is
   // just a space it causes issues for some reason.
   QStringList arguments = args.toString().split(' ');
+  qDebug()<<args.toString()<<arguments;
   if(arguments[0]=="")
     process->start(exe.toString());
   else
@@ -146,7 +145,7 @@ void MainWindow::onAddItem()
   item->show();
   if(item->exec())
   {
-    ui->layout->insertWidget (ui->layout->count()-1,
+    m_ui->progLayout->insertWidget (m_ui->progLayout->count()-1,
                           addButton(item->buttonText(),
                           item->path(),
                           item->executable(),
@@ -157,8 +156,8 @@ void MainWindow::onAddItem()
     QByteArray data=inputFile.readAll();
     inputFile.close();
     // we are now going to save the data back to the json file.
-    QJsonDocument doc = QJsonDocument::fromJson(data);
-    QJsonObject jsonObject=doc.object();
+//    m_doc = QJsonDocument::fromJson(data);
+    QJsonObject jsonObject=m_doc.object();
     QJsonObject newJson;
     newJson["ButtonText"]=item->buttonText();
     newJson["Exe"]=item->executable();
@@ -169,15 +168,16 @@ void MainWindow::onAddItem()
     QJsonObject root;
     root["Programs"]=programs;
     QJsonDocument newDoc(root);
-
-    QFile saveFile(m_filename);
-    if (!saveFile.open(QIODevice::WriteOnly))
-    {
-        qWarning("Couldn't open save file.");
-           return ;
-    }
-    saveFile.write(newDoc.toJson());
-    saveFile.close();
+    m_doc=newDoc;
+    m_modified=true;
+//    QFile saveFile(m_filename);
+//    if (!saveFile.open(QIODevice::WriteOnly))
+//    {
+//        qWarning("Couldn't open save file.");
+//           return ;
+//    }
+//    saveFile.write(newDoc.toJson());
+//    saveFile.close();
 
   }
 }
@@ -191,8 +191,8 @@ void MainWindow::readJSonFile(const QString &_fname)
           return;
   QByteArray data=inputFile.readAll();
   inputFile.close();
-  QJsonDocument doc = QJsonDocument::fromJson(data);
-  QJsonObject jsonObject=doc.object();
+  m_doc = QJsonDocument::fromJson(data);
+  QJsonObject jsonObject=m_doc.object();
   QJsonArray programs = jsonObject["Programs"].toArray();
   QString buttonText,path,exe,args;
 
@@ -205,7 +205,7 @@ void MainWindow::readJSonFile(const QString &_fname)
     args=prog["Arguments"].toString();
     qDebug()<<args;
     //ui->layout->addWidget(addButton(buttonText, path, exe,args));
-    ui->progLayout->addWidget(addButton(buttonText, path, exe,args));
+    m_ui->progLayout->addWidget(addButton(buttonText, path, exe,args));
 
   }
 
@@ -213,9 +213,9 @@ void MainWindow::readJSonFile(const QString &_fname)
 
 void MainWindow::onRunSequence()
 {
-  for(int i = 0; i < ui->progLayout->count(); i++)
+  for(int i = 0; i < m_ui->progLayout->count(); i++)
   {
-    QLayoutItem *item = ui->progLayout->itemAt(i);
+    QLayoutItem *item = m_ui->progLayout->itemAt(i);
     QPushButton *button = reinterpret_cast<QPushButton *>(item->widget());
     QVariant path=button->property("path");
     QVariant exe=button->property("exe");
@@ -248,3 +248,29 @@ void MainWindow::onRunSequence()
   }
 
 }
+
+
+void MainWindow::onExit()
+{
+    if(m_modified == true)
+    {
+     QMessageBox::StandardButton reply= QMessageBox::question(this,"Quit?","Buttons Modified to you wish to save to launcher.json?",QMessageBox::Yes|QMessageBox::No);
+      if(reply == QMessageBox::Yes)
+      {
+        QFile saveFile(m_filename);
+        if (!saveFile.open(QIODevice::WriteOnly))
+        {
+            qWarning("Couldn't open save file.");
+               return ;
+        }
+        saveFile.write(m_doc.toJson());
+        saveFile.close();
+      }
+    }
+}
+
+void MainWindow::closeEvent(QCloseEvent *)
+{
+  onExit();
+}
+

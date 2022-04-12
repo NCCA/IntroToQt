@@ -10,6 +10,8 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QAction>
+#include <QJsonDocument>
+
 #include "DebugWindow.h"
 #include "ui_MainWindow.h"
 
@@ -35,9 +37,11 @@ class MainWindow : public QMainWindow
     void onShowHelp();
     void onAddItem();
     void onRunSequence();
+    void onExit();
   private:
     QPushButton *addButton(const QString &_text, const QString &_path, const QString &_exe, const QString &_args);
     void readJSonFile(const QString &_fname);
+    void closeEvent(QCloseEvent *);
     DebugWindow *m_debug=nullptr;
     QMenuBar *m_menuBar;
     QMenu *m_helpMenu;
@@ -45,7 +49,9 @@ class MainWindow : public QMainWindow
     QMenu *m_fileMenu;
     QAction *m_addItemAction;
     QString m_filename;
-    Ui::MainWindow *ui;
+    Ui::MainWindow *m_ui;
+    QJsonDocument m_doc;
+    bool m_modified=false;
 
 
 };

@@ -21,7 +21,7 @@ HEADERS += $$PWD/include/MainWindow.h \
           $$PWD/include/AddItem.h
 
 CONFIG -= app_bundle
-CONFIG +=c++11
+CONFIG +=c++14
 DEPENDPATH+=include
 
 FORMS += \
