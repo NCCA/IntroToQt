@@ -3,7 +3,11 @@
 ######################################################################
 
 TEMPLATE = app
+<<<<<<< HEAD
 QT+= gui widgets core webengine
+=======
+QT+= gui widgets core webenginewidgets
+>>>>>>> 4269b9d436f770575c045e26185c3f8a18eb3dcb
 TARGET = MainWindow
 DEPENDPATH += .
 INCLUDEPATH += .

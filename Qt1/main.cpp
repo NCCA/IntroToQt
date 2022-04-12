@@ -1,7 +1,7 @@
-// #include <QApplication>
-// #include <QLabel>
-// #include <QPushButton>
-#include <QtWidgets>
+#include <QApplication>
+#include <QLabel>
+#include <QPushButton>
+#include <QLabel>
 
 int main(int argc, char *argv[])
 {

@@ -1,6 +1,10 @@
 #include <QApplication>
 #include <QMainWindow>
+<<<<<<< HEAD
 #include <QtWebEngineWidgets>
+=======
+#include <QWebEngineView>
+>>>>>>> 4269b9d436f770575c045e26185c3f8a18eb3dcb
 #include <QPushButton>
 #include <QToolBar>
 
