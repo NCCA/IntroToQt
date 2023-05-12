@@ -1,4 +1,5 @@
 #include "MainWindow.h"
+#include "SlideSpinWidget.h"
 #include <QtGlobal>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -64,7 +65,8 @@ void MainWindow::setupLeftUI(QGroupBox *_parent)
 
     // now we need to connect a few things together to make it work
     // 1st lets connect the spinbox to the text and slider
-    connect(spin,&QDoubleSpinBox::valueChanged,[=]
+    // not the qOverload this is for Qt5
+    connect(spin,qOverload<double>(&QDoubleSpinBox::valueChanged),[=]
             (double value)
             {
                 // update the slider to the new position
@@ -94,7 +96,14 @@ void MainWindow::setupLeftUI(QGroupBox *_parent)
 void MainWindow::setupRightUI(QGroupBox *_parent)
 {
     auto *layout=new QGridLayout(_parent);
+    auto slidespin = new SlideSpinWidget(this);
+    layout->addWidget(slidespin,0,0,1,4);
     _parent->setLayout(layout);
+    auto *text = new QLineEdit(_parent);
+    text->setReadOnly(true);
+    text->setText(slidespin->valueAsString());
+    layout->addWidget(text,1,0,1,4);
+
 
 }
 
