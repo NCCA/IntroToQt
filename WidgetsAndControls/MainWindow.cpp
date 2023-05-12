@@ -103,8 +103,12 @@ void MainWindow::setupRightUI(QGroupBox *_parent)
     text->setReadOnly(true);
     text->setText(slidespin->valueAsString());
     layout->addWidget(text,1,0,1,4);
-
-
+    connect(slidespin,qOverload<float>(&SlideSpinWidget::valueChanged),
+    [=](float value)
+    {
+        qDebug()<<"eorking";
+        text->setText(QString::number(value));
+    });
 }
 
 
