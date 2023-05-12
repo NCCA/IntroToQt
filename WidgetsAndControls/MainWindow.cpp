@@ -1,4 +1,5 @@
 #include "MainWindow.h"
+#include <QtGlobal>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -67,10 +68,11 @@ void MainWindow::setupLeftUI(QGroupBox *_parent)
             (double value)
             {
                 // update the slider to the new position
-                int  v  = (value - min) / (max-min) * range;
-                qDebug()<<"Spin "<<v<<" value "<<value;
-                if(slider->value() != v)
-                    slider->setValue(v);
+                double  v  = (value - min) / (max-min) * range;
+                // make sure we don't re-signal and update
+                slider->blockSignals(true);
+                slider->setValue(v);
+                slider->blockSignals(false);
                 // set text box for viewing
                 text->setText(spin->textFromValue(spin->value()));
 
@@ -78,10 +80,13 @@ void MainWindow::setupLeftUI(QGroupBox *_parent)
 
     connect(slider,&QSlider::valueChanged,[=](int value)
     {
+
         // basically linear interpolation to map back
         double v= min + (max-min)*(float)value/range;
-        if(spin->value() !=v)
-            spin->setValue(v);
+        // make sure we don't re-signal and update
+        spin->blockSignals(true);
+        spin->setValue(v);
+        spin->blockSignals(false);
         text->setText(spin->textFromValue(spin->value()));
 
     });
